@@ -4,13 +4,11 @@ const controller = require('./controller');
 
 mongoose.connect('mongodb://localhost/battlesimulator', {useNewUrlParser: true});
 
-mongoose.connection.once('open', function() {
-  console.log("Connected to MongoDB");
-});
+mongoose.set('useCreateIndex', true);
+mongoose.set('useFindAndModify', false);
 
-mongoose.connection.on('error', (err) => {
-    console.log('Database error: '+err);
-});
+mongoose.connection.once('open', () => console.log("Connected to MongoDB"));
+mongoose.connection.on('error', (err) => console.log('Database error: '+err));
 
 const port = 8080;
 
@@ -23,7 +21,5 @@ server.use(restify.plugins.queryParser());
 
 controller(server);
 
-server.listen(port, ()=>{
-    console.log(`${server.name} started on port ${port}`)
-});
+server.listen(port, () => console.log(`${server.name} started on port ${port}`));
 

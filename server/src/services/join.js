@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const Army = require('../models/army');
-const getArmy = require('./getArmy');
+const States = require('../models/enums/state')
+const { NotFoundError } = require('restify-errors');
 
 const generateToken = () => {
     return new Promise((resolve, reject) => {
@@ -12,31 +13,35 @@ const generateToken = () => {
     });
 }
 
+const generateUniqueToken = async () => {
+    while(true){
+        const token = await generateToken()
+        const army = await Army.findOne({accessToken: token});
+        if(army == null)
+            return token;
+    }   
+}
+
 const newJoin = (newArmy) => {
-    const {name, squads, webhookURL} = newArmy;
-    return generateToken()
+    const {name, squads, webhookURL, strategy} = newArmy;
+    return generateUniqueToken()
         .then(accessToken => {
-            const army = new Army({name, squads, webhookURL, accessToken});
+            const army = new Army({name, squads, webhookURL, accessToken, strategy});
             return army.save();       
         })
-        .then(result => {
-            return Promise.resolve(result); 
-        })
-        .catch(err => {
-            return Promise.reject(err);
-        });
+        .then(result => Promise.resolve(result))
+        .catch(err =>Promise.reject(err));
 }
 
 const returnJoin = (accessToken) => {
-    return getArmy(accessToken)
+    return Army.findOneAndUpdate({accessToken}, {state: States.Active})
         .then(army => {
             if(!army)
-                return Promise.reject(new Error("No army"));
+                return Promise.reject(new NotFoundError("No army"));
+            army.state = States.Active;
             return Promise.resolve(army);
         })
-        .catch(err => {
-            return Promise.reject(err);
-        });
+        .catch(err =>  Promise.reject(err));
    
 }
 
@@ -48,6 +53,7 @@ const join = (army, accessToken) => {
 }
 
 module.exports = (req, res, next) => {
+    console.log('JOIN ' + req.href());
     join(req.body, req.query.accessToken)
         .then(result => {
             res.json(result);
