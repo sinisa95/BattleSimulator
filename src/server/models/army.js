@@ -4,27 +4,27 @@ const States = require('./enums/state');
 const ArmySchema = mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   webhookURL: {
     type: String,
-    required: true
+    required: true,
   },
   accessToken: {
     type: String,
     required: true,
-    unique:true
+    unique: true,
   },
   squads: {
     type: Number,
-    required: true
-  },
-  state:{
-    type: String, 
     required: true,
-    enum: Object.values(States), 
-    default : States.Active
-  }
+  },
+  state: {
+    type: String,
+    required: true,
+    enum: Object.values(States),
+    default: States.Active,
+  },
 });
 
 module.exports = mongoose.model('army', ArmySchema);
