@@ -50,7 +50,7 @@ const attack = (accessToken, armyId) => Promise.all([
   }
   let update;
   if (attacked.squads <= damage) {
-    update = { squads: 0, state: States.Dead };
+    update = { squads: 0, state: States.DEAD };
   } else {
     update = { squads: attacked.squads - damage };
   }

@@ -1,19 +1,11 @@
 const armies = [];
 
-const armyJoined = (req, res, next) => {
-
-}
-
-const armyUpdated = (req, res, next) => {
-
-}
-
-const armyLeaved = (req, res, next) => {
-
-}
+const webhook = (req, res, next) => {
+  console.log(req.body);
+  res.json();
+  next();
+};
 
 module.exports = (server) => {
-  server.post('/army/join', armyJoined);
-  server.post('/army/update', armyUpdated);
-  server.post('/army/leave', armyLeaved);
+  server.post('/webhook', webhook);
 };

@@ -17,7 +17,7 @@ webhooks(server);
 server.listen(port, () => console.log(`${server.name} started on port ${port}`));
 
 axios.post('http://localhost:8080/api/join', { 
-  name: port, webhookURL: `http://localhost:${port}`, strategy: 'random', squads: 15,
+  name: port, webhookURL: `http://localhost:${port}/webhook`, squads: 15,
 })
   .then((response) => {
     console.log(response.data);

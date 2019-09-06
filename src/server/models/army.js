@@ -23,7 +23,7 @@ const ArmySchema = mongoose.Schema({
     type: String,
     required: true,
     enum: Object.values(States),
-    default: States.Active,
+    default: States.ACTIVE,
   },
 });
 

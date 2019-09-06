@@ -1,5 +1,5 @@
 module.exports = Object.freeze({
-  ACTIVE: 'active',
   LEAVED: 'leaved',
+  STOP: 'stop',
   DEAD: 'dead',
 });
