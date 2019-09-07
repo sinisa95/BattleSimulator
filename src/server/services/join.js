@@ -4,16 +4,6 @@ const chalk = require('chalk');
 const Army = require('../models/army');
 const States = require('../models/enums/state');
 const Events = require('../events');
-const JoinType = require('../models/enums/joinType');
-
-const createJoinEventData = (army) => (
-  {
-    armyId: army.id,
-    squads: army.squads,
-    type: army.state === States.ACTIVE ? JoinType.NEW : JoinType.RETURN,
-  }
-);
-
 
 const newJoin = (newArmy) => {
   const army = new Army(Object.assign(newArmy, { accessToken: nanoid() }));
@@ -42,6 +32,6 @@ module.exports = (req, res, next) => {
       res.json({ ...army.toObject(), state: States.ACTIVE });
       next();
       console.log(`${chalk.green('JOIN')} armyId: ${chalk.cyanBright(army.id)} squads: ${chalk.yellow(army.squads)}`);
-      return Events.joinEvent(createJoinEventData(army));
+      Events.joinEvent(army);
     }).catch((err) => next(err));
 };

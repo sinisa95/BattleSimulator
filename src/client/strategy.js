@@ -1,5 +1,5 @@
 module.exports = Object.freeze({
-  Weakest: 'weakest',
-  Strongest: 'strongest',
-  Random: 'random',
+  WEAKEST: 'weakest',
+  STRONGEST: 'strongest',
+  RANDOM: 'random',
 });
