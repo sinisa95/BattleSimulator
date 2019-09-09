@@ -11,11 +11,6 @@ const WebhookSchema = mongoose.Schema({
     required: true,
     enum: Object.values(EventTypes),
   },
-  receivedArmies: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'army',
-  }],
-
 });
 
 module.exports = mongoose.model('webhook', WebhookSchema);

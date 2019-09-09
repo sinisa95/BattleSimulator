@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node src/simulation.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node src/server/server.js",
-    "client": "node src/client/client.js "
+    "dropDB": "node src/scripts/dropDB.js",
+    "server":"node src/server/server.js",
+    "client": "node src/scripts/startClient.js"
   },
   "repository": {
     "type": "git",

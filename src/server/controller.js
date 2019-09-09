@@ -1,12 +1,24 @@
-const join = require('./services/join');
-const attack = require('./services/attack');
-const leave = require('./services/leave');
-
 const armyValidation = require('./validations/armyValidation');
 const validator = require('./validations/validator');
 
-module.exports = (server) => {
-  server.post('/api/join', validator(armyValidation), join);
-  server.put('/api/attack/:armyId', attack);
-  server.put('/api/leave', leave);
+module.exports = (server, services) => {
+  const { joinService, attackService, leaveService } = services;
+
+  server.post('/api/join', validator(armyValidation), (req, res, next) => {
+    joinService.join(req.body, req.query.accessToken)
+      .then((result) => res.json(result) || next())
+      .catch((err) => next(err));
+  });
+
+  server.put('/api/attack/:armyId',  (req, res, next) => {
+    attackService.attack(req.query.accessToken, req.params.armyId)
+      .then((result) => res.json(result) || next())
+      .catch((err) => next(err));
+  });
+
+  server.put('/api/leave', (req, res, next) => {
+    leaveService.leave(req.query.accessToken)
+      .then((result) => res.json(result) || next())
+      .catch((err) => next(err));
+  });
 };
