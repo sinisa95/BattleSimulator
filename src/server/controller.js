@@ -10,7 +10,7 @@ module.exports = (server, services) => {
       .catch((err) => next(err));
   });
 
-  server.put('/api/attack/:armyId',  (req, res, next) => {
+  server.put('/api/attack/:armyId', (req, res, next) => {
     attackService.attack(req.query.accessToken, req.params.armyId)
       .then((result) => res.json(result) || next())
       .catch((err) => next(err));

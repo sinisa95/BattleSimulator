@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dropDB": "node src/scripts/dropDB.js",
     "server":"node src/server/server.js",
-    "client": "node src/scripts/startClient.js"
+    "client": "node src/scripts/startClient.js",
+    "eslint": "eslint . --ignore-pattern node_modules/"
   },
   "repository": {
     "type": "git",

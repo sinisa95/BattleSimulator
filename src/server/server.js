@@ -7,11 +7,11 @@ const webhookRepository = require('./repositories/webhookRepository');
 const createJoinService = require('./services/joinService');
 const createAttackService = require('./services/attackService');
 const createLeaveService = require('./services/leaveService');
-const createWebhookEvents = require('./events'); 
+const createWebhookEvents = require('./events');
 
 const webhookEvent = createWebhookEvents(armyRepository, webhookRepository);
 const joinService = createJoinService(armyRepository, webhookEvent);
-const attakcService = createAttackService(armyRepository, webhookEvent);
+const attackService = createAttackService(armyRepository, webhookEvent);
 const leaveService = createLeaveService(armyRepository, webhookEvent);
 
 mongoose.connect('mongodb://localhost/battlesimulator', { useNewUrlParser: true });
@@ -31,6 +31,6 @@ const server = restify.createServer({
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
 
-setupController(server, { joinService, attakcService, leaveService });
+setupController(server, { joinService, attackService, leaveService });
 
 server.listen(port, () => logger.serverLog(`Started on port ${port}`));

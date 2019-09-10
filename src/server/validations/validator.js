@@ -1,6 +1,6 @@
 const Joi = require('@hapi/joi');
 const { BadRequestError } = require('restify-errors');
-//TODO make this async
+
 module.exports = (validation) => (req, res, next) => {
   const validationResult = Object.keys(validation)
     .map((key) => Joi.validate(req[key], validation[key]))

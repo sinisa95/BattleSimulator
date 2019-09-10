@@ -18,13 +18,13 @@ module.exports = (armyRepository, webhookRepository) => {
             logger.serverLeaveLog(army);
             WebhookEvent.emit(EventType.LEAVE, army.id, LeaveTypes.STOP);
           })
-          .catch(() => { /* Do something */ });
+          .catch(() => {});
       });
     });
   };
 
   const webhookEvent = (eventData, eventType) => Promise.all([
-    armyRepository.find({ state: States.ACTIVE }),
+    armyRepository.find({ state: { $ne: States.LEAVED } }),
     webhookRepository.save({ data: eventData, eventType }),
   ]).then(([armies]) => sendWebhookToArmies(armies, { data: eventData, eventType }));
 

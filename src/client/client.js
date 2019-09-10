@@ -1,19 +1,24 @@
+const { EventEmitter } = require('events');
 const restify = require('restify');
+const {
+  joinRequest, attackRequest, returnRequest, leaveRequest,
+} = require('./requests');
 const webhooks = require('./webhooks');
-const { joinRequest } = require('./requests');
-const fight = require('./fight');
+
+const selectStrategy = require('./strategy');
 const logger = require('../logger');
 
 module.exports = (port, url, name, squads, strategy) => {
   const clientData = {
-    id: null,
-    accessToken: null,
-    webhookURL: `http://localhost:${port}/webhook`,
-    armies: [],
-    strategy,
     name,
     squads,
     url,
+    webhookURL: `http://localhost:${port}/webhook`,
+    strategy: selectStrategy(strategy),
+    armies: [],
+    accessToken: null,
+    id: null,
+    deadEvent: new EventEmitter(),
   };
 
   const server = restify.createServer({ name });
@@ -27,8 +32,14 @@ module.exports = (port, url, name, squads, strategy) => {
     clientData.id = response.data.id;
     clientData.armies = response.data.armies;
     clientData.armies.forEach((army) => logger.clientArmyLog(clientData, army));
-    fight(clientData);
+    if (clientData.armies.length > 0) attackRequest(clientData);
   }).catch(() => {
     logger.clientLog(clientData, 'Server error');
   });
+
+  return {
+    deadEvent: clientData.deadEvent,
+    return: () => returnRequest(clientData),
+    leave: () => leaveRequest(clientData),
+  };
 };
