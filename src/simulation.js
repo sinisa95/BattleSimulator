@@ -29,12 +29,6 @@ const clients = [
   {
     port: 3008, name: 'Eight', squads: 65, strategy: Strategies.STRONGEST, delay: 5000, dead: false,
   },
-  {
-    port: 3009, name: 'Nine', squads: 22, strategy: Strategies.WEAKEST, delay: 5000, dead: false,
-  },
-  {
-    port: 3010, name: 'Ten', squads: 29, strategy: Strategies.RANDOM, delay: 5000, dead: false,
-  },
 ];
 
 clients.forEach((clientData, index) => setTimeout(() => {

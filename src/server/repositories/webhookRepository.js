@@ -4,4 +4,4 @@ exports.findOneAndUpdate = (conidtion, update) => Webhook.findOneAndUpdate(conid
 
 exports.save = (webhook) => new Webhook(webhook).save();
 
-exports.update = (webhook, update) => new Webhook(Object.assign(update, webhook)).save();
+exports.update = (webhook, update) => new Webhook(Object.assign(webhook, update)).save();

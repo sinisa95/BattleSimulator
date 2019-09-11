@@ -18,7 +18,7 @@ exports.returnRequest = (clientData) => axios.post(`${clientData.url}/api/join?a
 exports.attackRequest = (clientData) => {
   if (clientData.armies.length === 0) {
     Object.assign(clientData, { attacking: false });
-    return Promise.resolve();
+    return null;
   }
   Object.assign(clientData, { attacking: true });
   const army = clientData.strategy(clientData.armies);
