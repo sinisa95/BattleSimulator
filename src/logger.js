@@ -2,7 +2,7 @@ const chalk = require('chalk');
 
 const clientLog = false;
 
-exports.serverLog = (messagge) => clientLog && console.log(`${chalk.blue('SERVER')} -> ${messagge}`);
+exports.serverLog = (messagge) => console.log(`${chalk.blue('SERVER')} -> ${messagge}`);
 
 exports.serverJoinLog = (army, returned) => this.serverLog(
   `${chalk.green(!returned ? 'JOIN' : 'RETURN')} 

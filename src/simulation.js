@@ -35,7 +35,6 @@ const clients = [
   {
     port: 3010, name: 'Ten', squads: 29, strategy: Strategies.RANDOM, delay: 5000, dead: false,
   },
-
 ];
 
 clients.forEach((clientData, index) => setTimeout(() => {

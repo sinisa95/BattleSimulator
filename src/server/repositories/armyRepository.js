@@ -10,4 +10,4 @@ exports.findOneAndUpdate = (conidtions, update) => Army.findOneAndUpdate(conidti
 
 exports.save = (army) => new Army(army).save();
 
-exports.update = (army, update) => new Army(Object.assign(army, update)).save();
+exports.update = (army, update) => Army.findByIdAndUpdate(army.id, update);

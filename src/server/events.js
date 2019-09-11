@@ -28,8 +28,11 @@ module.exports = (armyRepository, webhookRepository) => {
     webhookRepository.save({ data: eventData, eventType }),
   ]).then(([armies]) => sendWebhookToArmies(armies, { data: eventData, eventType }));
 
-  WebhookEvent.on(EventType.JOIN, (armyId, squads, joinType) => setImmediate(() => {
-    webhookEvent({ id: armyId, squads, joinType }, EventType.JOIN);
+  WebhookEvent.on(EventType.JOIN, (armyId, name, squads, joinType) => setImmediate(() => {
+    const webhookData = {
+      id: armyId, name, squads, joinType,
+    };
+    webhookEvent(webhookData, EventType.JOIN);
   }));
 
   WebhookEvent.on(EventType.LEAVE, (armyId, leaveType) => setImmediate(() => {

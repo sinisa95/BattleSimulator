@@ -57,13 +57,26 @@ module.exports = (armyRepository, webhookEvent) => {
           dead: true,
         }));
     }
-    return armyRepository.update(attacked, { squads: attacked.squads - damage })
-      .then(() => Promise.resolve({
-        attacker,
-        attacked,
-        damage,
-        dead: false,
-      }));
+    const { accessToken } = attacked;
+    return armyRepository.findOneAndUpdate({ accessToken }, { squads: attacked.squads - damage })
+      .then((oldArmy) => {
+        if (oldArmy.state === States.DEAD) {
+          oldArmy.set('squads', 0);
+          oldArmy.save();
+          return Promise.resolve({
+            attacker,
+            attacked,
+            damage: 0,
+            dead: true,
+          });
+        }
+        return Promise.resolve({
+          attacker,
+          attacked,
+          damage,
+          dead: false,
+        });
+      });
   };
 
   const afterDamage = (eventData) => {

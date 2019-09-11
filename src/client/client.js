@@ -18,6 +18,7 @@ module.exports = (port, url, name, squads, strategy) => {
     armies: [],
     accessToken: null,
     id: null,
+    attacking: false,
     deadEvent: new EventEmitter(),
   };
 
@@ -32,7 +33,7 @@ module.exports = (port, url, name, squads, strategy) => {
     clientData.id = response.data.id;
     clientData.armies = response.data.armies;
     clientData.armies.forEach((army) => logger.clientArmyLog(clientData, army));
-    if (clientData.armies.length > 0) attackRequest(clientData);
+    if (!clientData.attacking) attackRequest(clientData);
   }).catch(() => {
     logger.clientLog(clientData, 'Server error');
   });

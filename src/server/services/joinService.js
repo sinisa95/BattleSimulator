@@ -22,7 +22,7 @@ module.exports = (armyRepository, webhookEvent) => {
     return armyRepository.save(newArmy)
       .then((army) => {
         logger.serverJoinLog(army);
-        webhookEvent.emit(EventTypes.JOIN, army.id, army.squads, JoinTypes.NEW);
+        webhookEvent.emit(EventTypes.JOIN, army.id, army.name, army.squads, JoinTypes.NEW);
         return Promise.resolve(army);
       })
       .catch((err) => Promise.reject(err));
@@ -36,7 +36,7 @@ module.exports = (armyRepository, webhookEvent) => {
         if (!army) throw new NotFoundError();
         Object.assign(army, update);
         logger.serverJoinLog(army, true);
-        webhookEvent.emit(EventTypes.JOIN, army.id, army.squads, JoinTypes.RETURN);
+        webhookEvent.emit(EventTypes.JOIN, army.id, army.name, army.squads, JoinTypes.RETURN);
         return Promise.resolve(army);
       }).catch((err) => Promise.reject(err));
   };
