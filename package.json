@@ -4,11 +4,11 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/simulation.js",
+    "start": "node -r dotenv/config src/simulation.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dropDB": "node src/scripts/dropDB.js",
-    "server":"node src/server/server.js",
-    "client": "node src/scripts/startClient.js",
+    "dropDB": "node -r dotenv/config src/scripts/dropDB.js",
+    "server": "node -r dotenv/config src/server/server.js",
+    "client": "node -r dotenv/config src/scripts/startClient.js",
     "eslint": "eslint . --ignore-pattern node_modules/"
   },
   "repository": {
@@ -31,7 +31,8 @@
     "restify-errors": "^8.0.1"
   },
   "devDependencies": {
-    "eslint": "^6.3.0",
+    "dotenv": "^8.1.0",
+    "eslint": "^6.4.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-promise": "^4.2.1"

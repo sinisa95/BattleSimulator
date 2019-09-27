@@ -1,3 +1,10 @@
-const Client = require('../client/client');
+const createClient = require('../client/client');
 
-Client(process.argv[2], 'http://localhost:8080', process.argv[3], process.argv[4], process.argv[5]);
+const clientData = {
+  port: process.argv[2],
+  name: process.argv[3],
+  squads: process.argv[4],
+  strategy: process.argv[5],
+};
+
+createClient(clientData);

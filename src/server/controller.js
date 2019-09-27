@@ -1,7 +1,7 @@
 const armyValidation = require('./validations/armyValidation');
 const validator = require('./validations/validator');
 
-module.exports = (server, services) => {
+const registerController = (server, services) => {
   const { joinService, attackService, leaveService } = services;
 
   server.post('/api/join', validator(armyValidation), (req, res, next) => {
@@ -22,3 +22,5 @@ module.exports = (server, services) => {
       .catch((err) => next(err));
   });
 };
+
+module.exports = registerController;

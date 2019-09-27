@@ -1,20 +1,21 @@
 const restify = require('restify');
 const mongoose = require('mongoose');
-const setupController = require('./controller');
+const registerController = require('./controller');
 const logger = require('../logger');
 const armyRepository = require('./repositories/armyRepository');
 const webhookRepository = require('./repositories/webhookRepository');
-const createJoinService = require('./services/joinService');
-const createAttackService = require('./services/attackService');
-const createLeaveService = require('./services/leaveService');
+const JoinService = require('./services/joinService');
+const AttackService = require('./services/attackService');
+const LeaveService = require('./services/leaveService');
 const createWebhookEvents = require('./events');
+const requests = require('./requests');
 
-const webhookEvent = createWebhookEvents(armyRepository, webhookRepository);
-const joinService = createJoinService(armyRepository, webhookEvent);
-const attackService = createAttackService(armyRepository, webhookEvent);
-const leaveService = createLeaveService(armyRepository, webhookEvent);
+const webhookEvent = createWebhookEvents(armyRepository, webhookRepository, requests);
+const joinService = new JoinService(armyRepository, webhookEvent);
+const attackService = new AttackService(armyRepository, webhookEvent);
+const leaveService = new LeaveService(armyRepository, webhookEvent);
 
-mongoose.connect('mongodb://localhost/battlesimulator', { useNewUrlParser: true });
+mongoose.connect(`mongodb://${process.env.MONGO_URL}`, { useNewUrlParser: true });
 
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
@@ -22,7 +23,7 @@ mongoose.set('useFindAndModify', false);
 mongoose.connection.once('open', () => logger.serverLog('Connected to MongoDB'));
 mongoose.connection.on('error', (err) => logger.serverLog(`Database error: ${err}`));
 
-const port = 8080;
+const port = process.env.SERVER_PORT;
 
 const server = restify.createServer({
   name: 'BattleSimulatorServer',
@@ -31,6 +32,6 @@ const server = restify.createServer({
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
 
-setupController(server, { joinService, attackService, leaveService });
+registerController(server, { joinService, attackService, leaveService });
 
 server.listen(port, () => logger.serverLog(`Started on port ${port}`));

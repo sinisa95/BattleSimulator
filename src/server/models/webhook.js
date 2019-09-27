@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const EventTypes = require('./enums/eventType');
+const eventType = require('./enums/eventType');
 
 const WebhookSchema = mongoose.Schema({
   data: {
@@ -9,7 +9,7 @@ const WebhookSchema = mongoose.Schema({
   eventType: {
     type: String,
     required: true,
-    enum: Object.values(EventTypes),
+    enum: Object.values(eventType),
   },
 });
 

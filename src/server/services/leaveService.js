@@ -1,22 +1,26 @@
 const { NotFoundError } = require('restify-errors');
-const States = require('../models/enums/state');
-const EventTypes = require('../models/enums/eventType');
+const states = require('../models/enums/state');
+const eventTypes = require('../models/enums/eventType');
 const LeaveTypes = require('../models/enums/leaveType');
 const logger = require('../../logger');
 
+class LeaveService {
+  constructor(armyRepository, webhookEvent) {
+    this.armyRepository = armyRepository;
+    this.webhookEvent = webhookEvent;
+  }
 
-module.exports = (armyRepository, webhookEvent) => {
-  const leave = (accessToken) => {
+  leave(accessToken) {
     const conditions = { accessToken };
-    const update = { state: States.LEAVED };
-    return armyRepository.findOneAndUpdate(conditions, update)
+    const update = { state: states.LEAVED };
+    return this.armyRepository.findOneAndUpdate(conditions, update, { new: true })
       .then((army) => {
         if (!army) throw new NotFoundError();
         logger.serverLeaveLog(army);
-        webhookEvent.emit(EventTypes.LEAVE, army.id, LeaveTypes.LEAVED);
-        return Promise.resolve(army);
-      })
-      .catch((err) => Promise.reject(err));
-  };
-  return { leave };
-};
+        this.webhookEvent.emit(eventTypes.LEAVE, army, LeaveTypes.LEAVED);
+        return Promise.resolve();
+      });
+  }
+}
+
+module.exports = LeaveService;

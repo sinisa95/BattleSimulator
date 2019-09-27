@@ -1,13 +1,24 @@
 const Army = require('../models/army');
 
-exports.find = (conditions) => Army.find(conditions);
+const find = (conditions) => Army.find(conditions);
 
-exports.findOne = (conditions) => Army.findOne(conditions);
+const findOne = (conditions) => Army.findOne(conditions);
 
-exports.findById = (id) => Army.findById(id);
+const findById = (id) => Army.findById(id);
 
-exports.findOneAndUpdate = (conidtions, update) => Army.findOneAndUpdate(conidtions, update);
+const findOneAndUpdate = (conditions, update, opts) => Army.findOneAndUpdate(
+  conditions, update, opts,
+);
 
-exports.save = (army) => new Army(army).save();
+const save = (army) => new Army(army).save();
 
-exports.update = (army, update) => Army.findByIdAndUpdate(army.id, update);
+const update = (army, armyUpdate) => Army.findByIdAndUpdate(army.id, armyUpdate);
+
+module.exports = {
+  find,
+  findOne,
+  findById,
+  findOneAndUpdate,
+  save,
+  update,
+};

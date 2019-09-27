@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const States = require('./enums/state');
+const states = require('./enums/state');
 
 const ArmySchema = mongoose.Schema({
   name: {
@@ -9,6 +9,7 @@ const ArmySchema = mongoose.Schema({
   webhookURL: {
     type: String,
     required: true,
+    unique: true,
   },
   accessToken: {
     type: String,
@@ -22,8 +23,8 @@ const ArmySchema = mongoose.Schema({
   state: {
     type: String,
     required: true,
-    enum: Object.values(States),
-    default: States.ACTIVE,
+    enum: Object.values(states),
+    default: states.ACTIVE,
   },
 });
 

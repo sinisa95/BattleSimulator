@@ -1,7 +1,13 @@
 const Webhook = require('../models/webhook');
 
-exports.findOneAndUpdate = (conidtion, update) => Webhook.findOneAndUpdate(conidtion, update);
+const findOneAndUpdate = (conditions, update) => Webhook.findOneAndUpdate(conditions, update);
 
-exports.save = (webhook) => new Webhook(webhook).save();
+const save = (webhook) => new Webhook(webhook).save();
 
-exports.update = (webhook, update) => new Webhook(Object.assign(webhook, update)).save();
+const update = (webhook, webhookUpdate) => new Webhook({ ...webhook, ...webhookUpdate }).save();
+
+module.exports = {
+  findOneAndUpdate,
+  save,
+  update,
+};
