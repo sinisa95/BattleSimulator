@@ -1,7 +1,10 @@
+const { EventEmitter } = require('events');
 const mongoose = require('mongoose');
-const states = require('./enums/state');
+const armyStates = require('./enums/armyState');
 
-const ArmySchema = mongoose.Schema({
+const afterDeadEvent = new EventEmitter();
+
+const armySchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -23,9 +26,15 @@ const ArmySchema = mongoose.Schema({
   state: {
     type: String,
     required: true,
-    enum: Object.values(states),
-    default: states.ACTIVE,
+    enum: Object.values(armyStates),
+    default: armyStates.ACTIVE,
   },
 });
 
-module.exports = mongoose.model('army', ArmySchema);
+// Hook for updateOne function which emits event when army is dead.
+armySchema.post('updateOne', function updateOneHook() {
+  if (this.getUpdate().state === armyStates.DEAD) afterDeadEvent.emit('dead');
+});
+
+module.exports = mongoose.model('army', armySchema);
+module.exports.afterDeadEvent = afterDeadEvent;

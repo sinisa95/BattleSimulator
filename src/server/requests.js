@@ -1,6 +1,7 @@
 const axios = require('axios');
 
-const sendWebhook = (webhookURL, data) => axios.post(`${webhookURL}`, data);
+// Function for sending request(webhook) to client
+const sendWebhook = (webhookURL, webhookData) => axios.post(`${webhookURL}`, webhookData);
 
 module.exports = {
   sendWebhook,

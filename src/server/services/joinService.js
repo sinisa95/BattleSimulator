@@ -1,10 +1,11 @@
 const { BadRequestError, NotFoundError } = require('restify-errors');
 const nanoid = require('nanoid');
-const states = require('../models/enums/state');
+const armyStates = require('../models/enums/armyState');
 const eventTypes = require('../models/enums/eventType');
 const joinTypes = require('../models/enums/joinType');
 const logger = require('../../logger');
 
+// Takes just neccesery fields from joined army and append all enemies in system.
 const convertToResponse = (joinedArmy, armies) => ({
   id: joinedArmy.id,
   name: joinedArmy.name,
@@ -16,6 +17,9 @@ const convertToResponse = (joinedArmy, armies) => ({
     .map((army) => ({ id: army.id, name: army.name, squads: army.squads })),
 });
 
+
+// Create new army.
+// If succeed, join event is triggered.
 function newJoin(newArmy) {
   return this.armyRepository.save({ ...newArmy, accessToken: nanoid() })
     .then((joinedArmy) => {
@@ -25,9 +29,12 @@ function newJoin(newArmy) {
     }).catch((err) => Promise.reject(new BadRequestError(err)));
 }
 
+
+// Find army with given access token and set army to be active.
+// If succeed, join event is triggered.
 function returnJoin(accessToken) {
-  const conditions = { accessToken, state: states.LEAVED };
-  const update = { state: states.ACTIVE };
+  const conditions = { accessToken, state: armyStates.LEAVED };
+  const update = { state: armyStates.ACTIVE };
   return this.armyRepository.findOneAndUpdate(conditions, update, { new: true })
     .then((joinedArmy) => {
       if (!joinedArmy) throw new NotFoundError();
@@ -43,10 +50,11 @@ class JoinService {
     this.webhookEvent = webhookEvent;
   }
 
+  // Join(new or return) army and return data about joined army and active enemies.
   join(army, accessToken) {
     return Promise.all([
       accessToken == null ? newJoin.call(this, army) : returnJoin.call(this, accessToken),
-      this.armyRepository.find({ state: states.ACTIVE }),
+      this.armyRepository.find({ state: armyStates.ACTIVE }),
     ]).then(([joinedArmy, armies]) => convertToResponse(joinedArmy, armies));
   }
 }

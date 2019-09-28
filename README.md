@@ -6,6 +6,7 @@ Battle Simulator is system with one main server and any number of clients. Serve
 ## Installation
 
 Before installing, [download and install Node.js](https://nodejs.org/en/download/).
+
 Clone repository to local machine:
 ```bash 
 $ git clone https://github.com/sinisa95/BattleSimulator.git    
@@ -14,6 +15,7 @@ Install dependencies:
 ```bash
 $ npm install
 ```
+Also, [download and install MongoDB server](https://www.mongodb.com/download-center/community).
 
 ## Usage
 
@@ -47,7 +49,7 @@ Start server only:
 ```bash
 $ npm run server
 ```
-To start client you need to provide: 
+To start only client you need to provide: 
 * port - port for the client server, 
 * name - name of the client, 
 * squads - number of squads between 10-100
@@ -56,7 +58,6 @@ To start client you need to provide:
   * strongest
   * random
   
-Start client only:
 ```bash
 $ npm run client <port> <name> <squads> <strategy>
 ```
