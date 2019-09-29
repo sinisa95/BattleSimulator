@@ -1,4 +1,3 @@
-const { EventEmitter } = require('events');
 const selectStrategy = require('./services/selectStrategy');
 const logger = require('../logger');
 
@@ -11,6 +10,7 @@ class Army {
       strategy,
     } = clientData;
 
+    // Initiliaze all field for army
     this.port = port;
     this.name = name;
     this.squads = squads;
@@ -21,31 +21,33 @@ class Army {
     this.id = null;
     this.attacking = false;
     this.strategy = selectStrategy(strategy);
-    this.deadEvent = new EventEmitter();
     this.requests = requests;
-    this.brojac = 0;
     this.join();
   }
 
+  // Find enemy using strategy and attack that enemy. If succeed attack again.
+  // Otherwise stop attacking and wait for new webhook event. Condtions for attacking are:
+  // - current army must be alive (squads != 0)
+  // - there must be alive enemies
+  // - current army cannot be in another attack
   attack() {
-    if (this.enemies.length === 0 || this.attacking) {
+    if (this.enemies.length === 0 || this.attacking || this.squads === 0) {
       return;
     }
     const enemy = this.strategy(this.enemies);
     this.attacking = true;
-    this.brojac += 1;
     this.requests.attackRequest(this.serverURL, this.accessToken, enemy.id)
       .then(() => {
         this.attacking = false;
-        this.brojac -= 1;
         this.attack();
       })
       .catch(() => {
-        this.brojac -= 1;
         this.attacking = false;
       });
   }
 
+  // Join this army to server. Server gives response with neccessary data for army and
+  // army is started attacking enemies.
   join() {
     const joinData = { name: this.name, webhookURL: this.webhookURL, squads: this.squads };
     this.requests.joinRequest(this.serverURL, joinData)
@@ -60,29 +62,32 @@ class Army {
       });
   }
 
+  // Return this army to server. If succeed, start to attack. Otherwise set army to not attack.
   return() {
     this.requests.returnRequest(this.serverURL, this.accessToken)
       .then((response) => {
         this.enemies = response.data.enemies;
-        this.enemies = response.data.squads;
+        this.squads = response.data.squads;
         this.attack();
       }).catch(() => {
+        this.squads = 0;
         this.enemies = [];
         this.attacking = false;
-        this.deadEvent.emit('dead');
       });
   }
 
+  // Leave this army from server. If succeed or not, army is set to not attack.
   leave() {
     this.requests.leaveRequest(this.serverURL, this.accessToken)
       .then(() => {
+        this.squads = 0;
         this.enemies = [];
         this.attacking = false;
       })
       .catch(() => {
+        this.squads = 0;
         this.enemies = [];
         this.attacking = false;
-        this.deadEvent.emit('dead');
       });
   }
 }

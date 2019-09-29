@@ -3,6 +3,7 @@ const registerController = require('./controller');
 const WebhookService = require('./services/webhookService');
 const logger = require('../logger');
 
+// Creates client server for given army
 const createClientServer = (army) => {
   const webhookService = new WebhookService(army);
   const server = restify.createServer({ name: army.name });

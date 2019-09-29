@@ -1,3 +1,5 @@
+// Register webhook api route for client.
+// This function gets restify server and all services for handling specific routes.
 const registerController = (server, services) => {
   const { webhookService } = services;
 
